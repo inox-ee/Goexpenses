@@ -15,3 +15,12 @@ test:
 
 ecr-login:
 	aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin $(AWS_ECR_URL)
+
+docker-compose-build:
+	docker compose -f compose.local.yaml build --no-cache
+
+docker-compose-up:
+	docker compose -f compose.local.yaml up -d
+
+lambda-root:
+	curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
