@@ -10,10 +10,10 @@ import (
 func TestHandler(t *testing.T) {
 	t.Run("TestHandler", func(t *testing.T) {
 		ctx := context.Background()
-		request := events.APIGatewayProxyRequest{}
-		expectedResponse := events.APIGatewayProxyResponse{
+		request := events.LambdaFunctionURLRequest{}
+		expectedResponse := events.LambdaFunctionURLResponse{
 			StatusCode: 200,
-			Body:       "\"Hello from Lambda!\"",
+			Body:       "\"Hello from Lambda!\"hogehoge",
 		}
 
 		response, err := handler(ctx, request)
