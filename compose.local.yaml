@@ -1,0 +1,8 @@
+services:
+  lambda:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    container_name: inoxee-goexpenses-lambda
+    ports:
+      - "9000:8080"
