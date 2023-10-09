@@ -7,10 +7,10 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	response := events.APIGatewayProxyResponse{
+func handler(ctx context.Context, event events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
+	response := events.LambdaFunctionURLResponse{
 		StatusCode: 200,
-		Body:       "\"Hello from Lambda!\"",
+		Body:       "\"Hello from Lambda!\"" + event.Body + event.RawPath + "hogehoge",
 	}
 	return response, nil
 }
