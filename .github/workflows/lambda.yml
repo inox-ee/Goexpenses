@@ -2,7 +2,9 @@ name: Deploy Lambda
 on:
   push:
     branches:
-      - feature/github-actions
+      - main
+    paths:
+      - "main.go"
   workflow_dispatch:
 
 env:
