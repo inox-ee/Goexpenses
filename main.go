@@ -8,9 +8,18 @@ import (
 )
 
 func handler(ctx context.Context, event events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
-	response := events.LambdaFunctionURLResponse{
-		StatusCode: 200,
-		Body:       "\"Hello from Lambda!\"" + event.Body + event.RawPath + "hogehoge",
+	var response events.LambdaFunctionURLResponse
+	switch event.RawPath {
+	case "/":
+		response = events.LambdaFunctionURLResponse{
+			StatusCode: 200,
+			Body:       "\"Hello from Lambda!\"" + event.Body + event.RawPath + "hogehoge",
+		}
+	case "/challenge":
+		response = events.LambdaFunctionURLResponse{
+			StatusCode: 200,
+			Body:       event.Body,
+		}
 	}
 	return response, nil
 }
