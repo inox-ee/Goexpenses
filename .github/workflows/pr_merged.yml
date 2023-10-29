@@ -9,7 +9,7 @@ on:
 
 env:
   ECR_REPOSITORY: inoxee/goexpenses
-  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_TAG: latest
 
 jobs:
   deploy:
