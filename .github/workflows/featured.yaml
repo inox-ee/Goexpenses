@@ -7,7 +7,6 @@ on:
 
 env:
   ECR_REPOSITORY: inoxee/goexpenses
-  IMAGE_TAG: $(date +'%Y%m%d%H%M%S')
 
 jobs:
   deploy:
@@ -32,5 +31,6 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
-          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          IMAGE_TAG=$(date +'%Y%m%d%H%M%S')
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG .
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
