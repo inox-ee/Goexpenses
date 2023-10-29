@@ -97,7 +97,7 @@ func slackVerificationMiddleware(config util.Config, next Handler) Handler {
 }
 
 func main() {
-	config, err := util.LoadConfig(".", "app")
+	config, err := util.LoadConfig()
 	if err != nil {
 		panic(err)
 	}

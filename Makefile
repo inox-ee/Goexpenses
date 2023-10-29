@@ -2,8 +2,8 @@
 include .env
 
 DATE := $(shell date +%Y%m%d%H%M%S)
-deploy-image: test
-	docker build -t inoxee/goexpenses:latest . --no-cache
+deploy-image:
+	docker build -t inoxee/goexpenses:latest --no-cache --build-arg _SLACK_SIGNING_SECRET=$(SLACK_SIGNING_SECRET) --build-arg _SLACK_BOT_TOKEN=$(SLACK_BOT_TOKEN) --progress plain .
 	docker tag inoxee/goexpenses:latest $(AWS_ECR_REPOSITORY_URL):$(DATE)
 	docker push $(AWS_ECR_REPOSITORY_URL):$(DATE)
 
