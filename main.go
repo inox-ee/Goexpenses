@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"inox-ee/Goexpenses/util"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -81,7 +80,7 @@ func slackVerificationMiddleware(config util.Config, next Handler) Handler {
 			}, err
 		}
 		bodyReader := io.TeeReader(r.Body, &verifier)
-		body, err := ioutil.ReadAll(bodyReader)
+		body, err := io.ReadAll(bodyReader)
 		if err != nil {
 			return events.LambdaFunctionURLResponse{
 				StatusCode: 500,
@@ -92,7 +91,7 @@ func slackVerificationMiddleware(config util.Config, next Handler) Handler {
 				StatusCode: 403,
 			}, err
 		}
-		r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+		r.Body = io.NopCloser(bytes.NewBuffer(body))
 		return next(ctx, event)
 	}
 }
