@@ -1,20 +1,24 @@
 package main
 
 import (
-	"context"
+	"io"
+	"net/http"
 
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
 )
 
-func handler(ctx context.Context, event events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
-	response := events.LambdaFunctionURLResponse{
-		StatusCode: 200,
-		Body:       "\"Hello from Lambda!\"" + event.Body + event.RawPath + "hogehoge",
-	}
-	return response, nil
-}
-
 func main() {
-	lambda.Start(handler)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello from Lambda!"))
+	})
+	http.HandleFunc("/challenge", func(w http.ResponseWriter, r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			w.Write([]byte(err.Error()))
+		}
+		w.Write(body)
+	})
+
+	lambda.Start(httpadapter.NewV2(http.DefaultServeMux).ProxyWithContext)
 }
