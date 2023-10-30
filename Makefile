@@ -2,8 +2,8 @@
 include .env
 
 DATE := $(shell date +%Y%m%d%H%M%S)
-deploy-image: test
-	docker build -t inoxee/goexpenses:latest . --no-cache
+deploy-image:
+	docker build -t inoxee/goexpenses:latest --no-cache --build-arg _SLACK_SIGNING_SECRET=$(SLACK_SIGNING_SECRET) --build-arg _SLACK_BOT_TOKEN=$(SLACK_BOT_TOKEN) --progress plain .
 	docker tag inoxee/goexpenses:latest $(AWS_ECR_REPOSITORY_URL):$(DATE)
 	docker push $(AWS_ECR_REPOSITORY_URL):$(DATE)
 
@@ -15,3 +15,12 @@ test:
 
 ecr-login:
 	aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin $(AWS_ECR_URL)
+
+docker-compose-build:
+	docker compose -f compose.local.yaml build --no-cache
+
+docker-compose-up:
+	docker compose -f compose.local.yaml up -d
+
+lambda-root:
+	curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'

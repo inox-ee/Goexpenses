@@ -3,11 +3,13 @@ on:
   push:
     paths:
       - "**.go"
+      - "Dockerfile"
   workflow_dispatch:
 
 env:
   ECR_REPOSITORY: inoxee/goexpenses
-  IMAGE_TAG: ${{ github.sha }}
+  SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
 jobs:
   deploy:
@@ -32,5 +34,6 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
-          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          IMAGE_TAG=$(git rev-parse --short "$GITHUB_SHA")
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG --build-arg SLACK_SIGNING_SECRET=${{ env.SLACK_SIGNING_SECRET }} --build-arg SLACK_BOT_TOKEN=${{ env.SLACK_BOT_TOKEN }} .
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
